@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  weather-service:
+    build: .
+    restart: always
+    ports:
+      - "8180:8080"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: pg
+    networks:
+      - net
+  postgres:
+    container_name: pg
+    image: postgres:14.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: weather_db
+    ports:
+      - "5432:5432"
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
+
+volumes:
+  postgres_data: 
