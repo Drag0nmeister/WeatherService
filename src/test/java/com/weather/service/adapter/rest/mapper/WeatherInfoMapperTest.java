@@ -47,7 +47,7 @@ class WeatherInfoMapperTest {
     @Test
     void shouldThrowNPEWhenTemperatureUnitIsNull() {
         WeatherInfo weatherInfo = new WeatherInfo();
-        weatherInfo.setTemperatureUnit(null); // важно
+        weatherInfo.setTemperatureUnit(null);
 
         ZoneId clientZone = ZoneId.of("Europe/Moscow");
 
