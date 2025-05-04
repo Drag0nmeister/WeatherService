@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1" author="Lev.Shapovalov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="city"/>
+            </not>
+        </preConditions>
+        <createTable tableName="city">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="double precision">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Lev.Shapovalov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="weather_info"/>
+            </not>
+        </preConditions>
+        <createTable tableName="weather_info">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="city_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature" type="decimal(4,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature_unit" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="weather_info"
+                                 baseColumnNames="city_id"
+                                 constraintName="fk_weather_info_city"
+                                 referencedTableName="city"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <createIndex indexName="idx_weather_info_city_timestamp" tableName="weather_info">
+            <column name="city_id"/>
+            <column name="timestamp"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

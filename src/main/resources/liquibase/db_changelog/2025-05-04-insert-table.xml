@@ -1,0 +1,47 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="Lev.Shapovalov">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="city"/>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM city</sqlCheck>
+        </preConditions>
+        <insert tableName="city">
+            <column name="name" value="Moscow"/>
+            <column name="country" value="Russia"/>
+            <column name="latitude" valueNumeric="55.7558"/>
+            <column name="longitude" valueNumeric="37.6173"/>
+        </insert>
+
+        <insert tableName="city">
+            <column name="name" value="London"/>
+            <column name="country" value="United Kingdom"/>
+            <column name="latitude" valueNumeric="51.5074"/>
+            <column name="longitude" valueNumeric="-0.1278"/>
+        </insert>
+
+        <insert tableName="city">
+            <column name="name" value="New York"/>
+            <column name="country" value="United States"/>
+            <column name="latitude" valueNumeric="40.7128"/>
+            <column name="longitude" valueNumeric="-74.0060"/>
+        </insert>
+
+        <insert tableName="city">
+            <column name="name" value="Paris"/>
+            <column name="country" value="France"/>
+            <column name="latitude" valueNumeric="48.8566"/>
+            <column name="longitude" valueNumeric="2.3522"/>
+        </insert>
+
+        <insert tableName="city">
+            <column name="name" value="Tokyo"/>
+            <column name="country" value="Japan"/>
+            <column name="latitude" valueNumeric="35.6762"/>
+            <column name="longitude" valueNumeric="139.6503"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
