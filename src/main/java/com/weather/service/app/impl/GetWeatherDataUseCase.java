@@ -35,26 +35,31 @@ public class GetWeatherDataUseCase implements GetWeatherDataInbound {
 
         City findCity = cityRepository.findByNameAndCountry(city, country)
                 .orElseThrow(() -> new CityNotFoundException(city, country));
-
         ZoneId clientZone = ZoneId.of(timezone);
 
-        if (date == null) {
-            log.info("No date provided. Returning the most recent weather data for city: {}, {}", city, country);
-            return weatherInfoRepository.findTopByCityOrderByTimestampDesc(findCity)
-                    .map(info -> weatherInfoMapper.toWeatherInfoResponseDTO(info, clientZone))
-                    .map(Collections::singletonList)
-                    .orElse(Collections.emptyList());
-        }
+        return (date == null) ? getLatestWeather(findCity, clientZone) : getWeatherForDate(findCity, clientZone, date, city, country);
+    }
 
+
+    private List<WeatherInfoResponseDTO> getLatestWeather(City city, ZoneId clientZone) {
+        log.info("No date provided. Returning most recent data for city: {}, {}", city.getName(), city.getCountry());
+
+        return weatherInfoRepository.findTopByCityOrderByTimestampDesc(city)
+                .map(info -> weatherInfoMapper.toWeatherInfoResponseDTO(info, clientZone))
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
+    }
+
+    private List<WeatherInfoResponseDTO> getWeatherForDate(City city, ZoneId clientZone, LocalDate date, String cityName, String country) {
         ZonedDateTime startOfDay = date.atStartOfDay(ZoneOffset.UTC);
         ZonedDateTime endOfDay = startOfDay.plusDays(1);
 
-        List<WeatherInfoResponseDTO> result = weatherInfoRepository.findWeatherInfoForCityBetween(findCity, startOfDay, endOfDay)
+        List<WeatherInfoResponseDTO> results = weatherInfoRepository.findWeatherInfoForCityBetween(city, startOfDay, endOfDay)
                 .stream()
                 .map(info -> weatherInfoMapper.toWeatherInfoResponseDTO(info, clientZone))
                 .toList();
 
-        log.info("Found {} weather records for city: {}, {}, date: {}", result.size(), city, country, date);
-        return result;
+        log.info("Found {} weather records for city: {}, {}, date: {}", results.size(), cityName, country, date);
+        return results;
     }
 }
