@@ -76,6 +76,13 @@ mvn spring-boot:run
 1. http://localhost:8180/swagger-ui/index.html#/ - если через Docker
 2. http://localhost:8080/swagger-ui/index.html#/ - если локально
 
+## Настройка переодичности опроса провайдеров
+Через параметр в application.yml. Сейчас установлена переодичность 1 раз в минуту.
+app:
+  weather:
+    update-job:
+      cron: "0 0/1 * * * ?"
+
 ## API Endpoints
 
 ### 1. Получение температуры
